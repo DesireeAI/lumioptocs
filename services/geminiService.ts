@@ -7,15 +7,8 @@ export const editImageWithAI = async (
   prompt: string
 ): Promise<AIEditResponse> => {
   try {
-    // O nome correto da variável deve ser API_KEY
-    // O SDK será inicializado sempre antes da chamada para garantir o uso da chave atual
-    const apiKey = process.env.API_KEY;
-    
-    if (!apiKey) {
-      return { error: "A chave API_KEY não foi configurada nas variáveis de ambiente." };
-    }
-
-    const ai = new GoogleGenAI({ apiKey });
+    // Inicialização direta conforme diretrizes: o ambiente deve fornecer process.env.API_KEY
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
     const base64Data = base64Image.split(',')[1] || base64Image;
     const mimeType = base64Image.split(';')[0].split(':')[1] || 'image/jpeg';
@@ -55,6 +48,6 @@ export const editImageWithAI = async (
     return { imageUrl, text: textOutput };
   } catch (error: any) {
     console.error("Gemini Error:", error);
-    return { error: "Não foi possível processar a imagem. Verifique sua chave API_KEY no Netlify." };
+    return { error: "Ocorreu um erro na comunicação com a IA. Certifique-se de que a API_KEY está configurada corretamente no painel do Netlify." };
   }
 };
