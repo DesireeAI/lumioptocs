@@ -13,6 +13,8 @@
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
         }
         h1, h2, h3, .font-serif {
             font-family: 'Playfair Display', serif;
@@ -29,6 +31,18 @@
         .animate-fade-in-up {
             animation: fadeInUp 0.8s ease-out forwards;
         }
+        /* Preloadeer básico para evitar tela branca enquanto o JS carrega */
+        #root:empty::before {
+            content: "Carregando Lumina Optics...";
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #64748b;
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
     </style>
 <script type="importmap">
 {
@@ -43,5 +57,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
+    <!-- O script de entrada deve ser carregado como módulo -->
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>

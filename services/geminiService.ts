@@ -7,11 +7,24 @@ export const editImageWithAI = async (
   prompt: string
 ): Promise<AIEditResponse> => {
   try {
-    // Verificação segura da API Key para evitar crash do React
-    const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
+    // Acesso ultra-seguro à API Key para evitar crash em browsers/Netlify
+    let apiKey: string | undefined;
+    
+    try {
+      // Tenta acessar via process.env (padrão Node/Bundlers)
+      if (typeof process !== 'undefined' && process.env) {
+        apiKey = process.env.API_KEY;
+      }
+      // Fallback para variáveis globais injetadas
+      if (!apiKey && (window as any)._env_?.API_KEY) {
+        apiKey = (window as any)._env_.API_KEY;
+      }
+    } catch (e) {
+      console.warn("Ambiente não possui objeto process. Tentando alternativas...");
+    }
     
     if (!apiKey) {
-      return { error: "API Key não encontrada. Configure a variável de ambiente API_KEY." };
+      return { error: "Configuração pendente: A chave de API não foi detectada no ambiente." };
     }
 
     const ai = new GoogleGenAI({ apiKey });
@@ -53,7 +66,7 @@ export const editImageWithAI = async (
 
     return { imageUrl, text: textOutput };
   } catch (error: any) {
-    console.error("Gemini Error:", error);
-    return { error: "Erro na IA. Verifique sua conexão ou chave de API." };
+    console.error("Erro Crítico Gemini:", error);
+    return { error: "A IA encontrou um problema técnico. Tente novamente em instantes." };
   }
 };
