@@ -7,24 +7,12 @@ export const editImageWithAI = async (
   prompt: string
 ): Promise<AIEditResponse> => {
   try {
-    // Acesso ultra-seguro à API Key para evitar crash em browsers/Netlify
-    let apiKey: string | undefined;
-    
-    try {
-      // Tenta acessar via process.env (padrão Node/Bundlers)
-      if (typeof process !== 'undefined' && process.env) {
-        apiKey = process.env.API_KEY;
-      }
-      // Fallback para variáveis globais injetadas
-      if (!apiKey && (window as any)._env_?.API_KEY) {
-        apiKey = (window as any)._env_.API_KEY;
-      }
-    } catch (e) {
-      console.warn("Ambiente não possui objeto process. Tentando alternativas...");
-    }
+    // O nome correto da variável deve ser API_KEY
+    // O SDK será inicializado sempre antes da chamada para garantir o uso da chave atual
+    const apiKey = process.env.API_KEY;
     
     if (!apiKey) {
-      return { error: "Configuração pendente: A chave de API não foi detectada no ambiente." };
+      return { error: "A chave API_KEY não foi configurada nas variáveis de ambiente." };
     }
 
     const ai = new GoogleGenAI({ apiKey });
@@ -43,9 +31,9 @@ export const editImageWithAI = async (
             },
           },
           {
-            text: `System: You are a professional eyewear stylist.
+            text: `System: You are a professional eyewear stylist for Lumina Optics.
             User Request: ${prompt}. 
-            Instruction: Modify the image to fulfill the request. Fit the glasses realistically.`,
+            Instruction: Modify the image to fulfill the request. Make the glasses look natural and high-end.`,
           },
         ],
       },
@@ -66,7 +54,7 @@ export const editImageWithAI = async (
 
     return { imageUrl, text: textOutput };
   } catch (error: any) {
-    console.error("Erro Crítico Gemini:", error);
-    return { error: "A IA encontrou um problema técnico. Tente novamente em instantes." };
+    console.error("Gemini Error:", error);
+    return { error: "Não foi possível processar a imagem. Verifique sua chave API_KEY no Netlify." };
   }
 };
