@@ -1,0 +1,7 @@
+{
+  "name": "Lumina Optics - AI-Powered Eyewear Studio",
+  "description": "A modern and elegant landing page for a premium eyewear store featuring an AI-driven image studio where users can visualize styles and filters using Gemini 2.5 Flash Image.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
