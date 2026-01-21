@@ -3,69 +3,85 @@ import React from 'react';
 
 const Hero: React.FC = () => {
   return (
-    <div className="relative h-screen flex items-center pt-20 overflow-hidden bg-slate-50">
-      {/* Abstract Shapes */}
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-amber-100 rounded-full blur-3xl opacity-50"></div>
-      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="relative z-10 space-y-8 animate-fade-in-up">
-            <div className="inline-block px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold uppercase tracking-wider">
-              Nova Coleção 2024
+    <div className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-slate-50">
+      {/* Elementos decorativos de luxo */}
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-100/50 -skew-x-12 translate-x-1/4 z-0"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-7 space-y-10 animate-fade-in-up">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <span className="h-px w-12 bg-amber-600"></span>
+                <span className="text-amber-700 text-xs font-bold uppercase tracking-[0.3em]">Excluvidade & Design</span>
+              </div>
+              <h1 className="text-6xl md:text-8xl font-serif text-slate-900 leading-[1.1] tracking-tight">
+                A arte de ver com <br/>
+                <span className="italic text-amber-600">perfeição.</span>
+              </h1>
             </div>
-            <h1 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight">
-              A clareza que o seu <span className="italic text-amber-600">olhar</span> merece.
-            </h1>
-            <p className="text-lg text-slate-600 max-w-lg leading-relaxed">
-              Curadoria exclusiva de marcas internacionais e design artesanal. Na Lumina Optics, transformamos visão em expressão de estilo.
+            
+            <p className="text-xl text-slate-500 max-w-xl leading-relaxed font-light">
+              Muito além de uma ótica, uma consultoria de visagismo completa. 
+              Unimos tecnologia de precisão com a curadoria das marcas mais desejadas do mundo.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+
+            <div className="flex flex-col sm:flex-row gap-6">
               <a 
-                href="#colecoes" 
-                className="inline-flex items-center justify-center px-8 py-4 bg-slate-900 text-white rounded-full font-medium hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl"
+                href="https://wa.me/5511987654321" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-10 py-5 bg-slate-900 text-white rounded-full font-bold hover:bg-amber-600 transition-all shadow-2xl hover:-translate-y-1 group"
               >
-                Ver Coleções
+                <span>Agendar Consulta</span>
+                <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
               </a>
               <a 
-                href="#studio-ai" 
-                className="inline-flex items-center justify-center px-8 py-4 border-2 border-slate-900 text-slate-900 rounded-full font-medium hover:bg-slate-50 transition-all"
+                href="#colecoes" 
+                className="inline-flex items-center justify-center px-10 py-5 border-2 border-slate-200 text-slate-900 rounded-full font-bold hover:bg-white hover:border-slate-900 transition-all"
               >
-                Visualizar com AI
+                Explorar Vitrine
               </a>
             </div>
             
-            <div className="flex items-center space-x-8 pt-8 border-t border-slate-200">
+            <div className="pt-12 grid grid-cols-3 gap-8 border-t border-slate-200 max-w-lg">
               <div>
-                <p className="text-2xl font-serif font-bold text-slate-900">15+</p>
-                <p className="text-sm text-slate-500 uppercase tracking-tighter">Marcas Premium</p>
+                <p className="text-3xl font-serif text-slate-900">25</p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Anos de História</p>
               </div>
-              <div className="w-px h-10 bg-slate-200"></div>
               <div>
-                <p className="text-2xl font-serif font-bold text-slate-900">8k+</p>
-                <p className="text-sm text-slate-500 uppercase tracking-tighter">Clientes Felizes</p>
+                <p className="text-3xl font-serif text-slate-900">10k</p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Clientes Féis</p>
+              </div>
+              <div>
+                <p className="text-3xl font-serif text-slate-900">100%</p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Satisfação</p>
               </div>
             </div>
           </div>
 
-          <div className="relative hidden lg:block h-[600px]">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl">
+          <div className="lg:col-span-5 relative hidden lg:block">
+            <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.25)]">
               <img 
-                src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=800" 
-                alt="Elegant eyewear model" 
-                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                src="https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=800" 
+                alt="Eyewear Collection" 
+                className="w-full h-full object-cover scale-110 hover:scale-100 transition-transform duration-1000"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl max-w-[200px]">
-              <div className="flex space-x-1 mb-2">
+            
+            {/* Badge flutuante */}
+            <div className="absolute -bottom-8 -left-8 bg-white p-8 rounded-3xl shadow-2xl max-w-[240px] border border-slate-100">
+              <div className="flex items-center space-x-1 mb-3">
                 {[1,2,3,4,5].map(i => (
-                  <svg key={i} className="w-4 h-4 text-amber-400 fill-current" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
+                  <svg key={i} className="w-4 h-4 text-amber-500 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                 ))}
               </div>
-              <p className="text-sm font-medium text-slate-800">"Melhor experiência de compra de óculos que já tive."</p>
-              <p className="text-xs text-slate-500 mt-1">— Mariana Costa</p>
+              <p className="text-slate-800 font-serif italic text-lg leading-snug">"O melhor atendimento que já tive em São Paulo."</p>
+              <div className="mt-4 flex items-center space-x-3">
+                <div className="w-8 h-8 rounded-full bg-slate-200"></div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Dr. Ricardo M.</p>
+              </div>
             </div>
           </div>
         </div>
