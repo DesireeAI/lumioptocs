@@ -5,6 +5,8 @@ import Hero from './components/Hero';
 import Collections from './components/Collections';
 import AIService from './components/AIService';
 import Features from './components/Features';
+import StoreLocator from './components/StoreLocator';
+import Blog from './components/Blog';
 import Footer from './components/Footer';
 
 const App: React.FC = () => {
@@ -23,28 +25,30 @@ const App: React.FC = () => {
       <Navbar scrolled={scrolled} />
       
       <main>
-        {/* Seção Início */}
         <div id="inicio">
           <Hero />
         </div>
 
-        {/* Seção Coleções */}
         <section id="colecoes" className="py-24 bg-white">
           <Collections />
         </section>
 
-        {/* Seção Serviços */}
         <section id="servicos" className="py-24 bg-slate-50">
           <Features />
         </section>
 
-        {/* Seção AI Studio */}
+        {/* Novo: Localização Física */}
+        <StoreLocator />
+
         <section id="studio-ai" className="py-24 bg-slate-900 text-white overflow-hidden">
           <AIService />
         </section>
+
+        <section className="py-24 bg-white">
+          <Blog />
+        </section>
       </main>
 
-      {/* Seção Contato integrada no Footer */}
       <Footer />
     </div>
   );

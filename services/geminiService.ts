@@ -7,23 +7,22 @@ export const editImageWithAI = async (
   prompt: string
 ): Promise<AIEditResponse> => {
   try {
-    // Verificação da presença da chave conforme as diretrizes
-    const apiKey = process.env.API_KEY;
+    // Acesso direto à variável de ambiente injetada pelo Netlify
+    const apiKey = process.env.VITE_API_KEY;
 
-    if (!apiKey || apiKey === "undefined" || apiKey === "") {
-      console.error("ERRO: process.env.API_KEY não detectada.");
+    if (!apiKey || apiKey === "undefined") {
+      console.error("ERRO CRÍTICO: API_KEY não definida no ambiente.");
       return { 
-        error: "Ambiente não configurado: A chave de API não foi detectada. Verifique as configurações de variáveis de ambiente." 
+        error: "A Chave de API (API_KEY) não foi detectada no seu navegador. Certifique-se de que configurou a variável de ambiente no Netlify e realizou um 'Clear Cache and Deploy'." 
       };
     }
 
-    // Fix: Create a new GoogleGenAI instance right before the call and use process.env.API_KEY directly
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+    // Inicialização do SDK seguindo estritamente as diretrizes
+    const ai = new GoogleGenAI({ apiKey });
     
     const base64Data = base64Image.split(',')[1] || base64Image;
     const mimeType = base64Image.split(';')[0].split(':')[1] || 'image/jpeg';
 
-    // Fix: Move system-level instructions to config.systemInstruction
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
       contents: {
@@ -35,17 +34,18 @@ export const editImageWithAI = async (
             },
           },
           {
-            text: prompt,
+            text: `Por favor, aplique estes óculos ou estilo na pessoa da foto: ${prompt}`,
           },
         ],
       },
       config: {
-        systemInstruction: "You are an expert luxury eyewear stylist. Your task is to generate a realistic image of the person wearing the requested glasses based on the provided image and prompt.",
+        systemInstruction: "Você é um estilista de óculos de luxo. Sua tarefa é editar a imagem para que a pessoa pareça estar usando os óculos descritos de forma perfeitamente realista.",
       }
     });
 
     let imageUrl: string | undefined;
-    // Fix: Iterate through all parts to correctly find the generated image data
+    
+    // Iteração correta sobre as partes da resposta
     if (response.candidates?.[0]?.content?.parts) {
       for (const part of response.candidates[0].content.parts) {
         if (part.inlineData) {
@@ -55,15 +55,20 @@ export const editImageWithAI = async (
     }
 
     if (!imageUrl) {
-      return { error: "A IA processou o pedido mas não gerou uma nova imagem. Tente ser mais específico no modelo dos óculos." };
+      return { error: "Não foi possível gerar a prévia visual. Tente um comando mais simples." };
     }
 
-    // Fix: Use response.text (property, not method) to retrieve any text response from the model
     return { imageUrl, text: response.text };
   } catch (error: any) {
-    console.error("Gemini Critical Error:", error);
+    console.error("Gemini API Error:", error);
+    
+    // Tratamento de erro específico para chave não autorizada/créditos
+    if (error.message?.includes("API key not valid")) {
+      return { error: "Chave de API inválida. Verifique se copiou a chave corretamente do Google AI Studio." };
+    }
+    
     return { 
-      error: `Falha técnica: ${error.message || "Erro desconhecido na API"}` 
+      error: `Erro ao processar imagem: ${error.message || "Falha na comunicação com a IA"}` 
     };
   }
 };

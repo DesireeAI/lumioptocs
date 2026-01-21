@@ -11,9 +11,8 @@ const Navbar: React.FC<NavbarProps> = ({ scrolled }) => {
   const links = [
     { name: 'Início', href: '#inicio' },
     { name: 'Coleções', href: '#colecoes' },
-    { name: 'Serviços', href: '#servicos' },
+    { name: 'Localização', href: '#localizacao' },
     { name: 'AI Studio', href: '#studio-ai' },
-    { name: 'Contato', href: '#contato' },
   ];
 
   const handleLinkClick = () => {
@@ -48,10 +47,10 @@ const Navbar: React.FC<NavbarProps> = ({ scrolled }) => {
                 </a>
               ))}
               <a 
-                href="#contato"
+                href="https://wa.me/5511987654321"
                 className="bg-slate-900 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition-all shadow-md"
               >
-                Agendar Consulta
+                Agendar Horário
               </a>
             </div>
           </div>
@@ -73,7 +72,6 @@ const Navbar: React.FC<NavbarProps> = ({ scrolled }) => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <div className={`md:hidden absolute w-full bg-white border-b border-slate-100 transition-all duration-300 ${isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-4'}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-xl">
           {links.map((link) => (
@@ -86,13 +84,6 @@ const Navbar: React.FC<NavbarProps> = ({ scrolled }) => {
               {link.name}
             </a>
           ))}
-          <a 
-            href="#contato"
-            className="block w-full text-center mt-4 bg-amber-600 text-white px-3 py-3 rounded-lg text-base font-bold"
-            onClick={handleLinkClick}
-          >
-            Agendar Consulta
-          </a>
         </div>
       </div>
     </nav>
