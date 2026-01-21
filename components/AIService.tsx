@@ -29,15 +29,19 @@ const AIService: React.FC = () => {
     setIsProcessing(true);
     setError(null);
     
-    const response = await editImageWithAI(image, prompt);
-    
-    if (response.error) {
-      setError(response.error);
-    } else if (response.imageUrl) {
-      setResultImage(response.imageUrl);
+    try {
+      const response = await editImageWithAI(image, prompt);
+      
+      if (response.error) {
+        setError(response.error);
+      } else if (response.imageUrl) {
+        setResultImage(response.imageUrl);
+      }
+    } catch (err) {
+      setError("Ocorreu um erro inesperado ao conectar com o servidor de IA.");
+    } finally {
+      setIsProcessing(false);
     }
-    
-    setIsProcessing(false);
   };
 
   const reset = () => {
@@ -79,6 +83,7 @@ const AIService: React.FC = () => {
                     type="text" 
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleEdit()}
                     placeholder="Ex: Adicione óculos retrô vermelhos..."
                     className="w-full bg-slate-800 border border-slate-700 text-white rounded-2xl px-6 py-4 focus:ring-2 focus:ring-amber-500 outline-none transition-all pr-12"
                   />
@@ -112,8 +117,13 @@ const AIService: React.FC = () => {
             )}
             
             {error && (
-              <div className="p-4 bg-red-900/30 border border-red-900/50 text-red-400 rounded-xl text-sm">
-                {error}
+              <div className="p-4 bg-red-900/30 border border-red-500/40 text-red-100 rounded-xl text-sm leading-relaxed">
+                <div className="flex items-start space-x-2">
+                  <svg className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>{error}</span>
+                </div>
               </div>
             )}
           </div>
@@ -138,7 +148,7 @@ const AIService: React.FC = () => {
               {isProcessing && (
                 <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center">
                   <div className="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                  <p className="text-white font-medium animate-pulse">Gemini está redesenhando...</p>
+                  <p className="text-white font-medium animate-pulse text-center px-6">O Gemini está redesenhando seu estilo...</p>
                 </div>
               )}
               {resultImage && !isProcessing && (

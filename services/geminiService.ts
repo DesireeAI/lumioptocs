@@ -7,7 +7,10 @@ export const editImageWithAI = async (
   prompt: string
 ): Promise<AIEditResponse> => {
   try {
-    // Inicialização direta conforme diretrizes: o ambiente deve fornecer process.env.API_KEY
+    // Verificação de diagnóstico no console (F12)
+    console.log("Tentando inicializar Gemini com API_KEY...");
+    
+    // Inicialização direta conforme a regra obrigatória do SDK
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
     const base64Data = base64Image.split(',')[1] || base64Image;
@@ -45,9 +48,27 @@ export const editImageWithAI = async (
       }
     }
 
+    if (!imageUrl && !textOutput) {
+      throw new Error("A IA não retornou nenhum dado. Tente um prompt diferente.");
+    }
+
     return { imageUrl, text: textOutput };
   } catch (error: any) {
-    console.error("Gemini Error:", error);
-    return { error: "Ocorreu um erro na comunicação com a IA. Certifique-se de que a API_KEY está configurada corretamente no painel do Netlify." };
+    // Log detalhado para o desenvolvedor no console do navegador
+    console.error("ERRO DETALHADO GEMINI:", error);
+    
+    let userFriendlyError = "Erro ao processar imagem.";
+    
+    if (!process.env.API_KEY) {
+      userFriendlyError = "A API_KEY não foi detectada pelo navegador. Verifique o build no Netlify.";
+    } else if (error.message?.includes("API key not valid")) {
+      userFriendlyError = "A chave de API configurada é inválida.";
+    } else if (error.message?.includes("model not found")) {
+      userFriendlyError = "O modelo Gemini 2.5 Flash Image não está disponível para esta chave.";
+    } else {
+      userFriendlyError = `Erro da API: ${error.message || "Falha desconhecida"}`;
+    }
+
+    return { error: userFriendlyError };
   }
 };

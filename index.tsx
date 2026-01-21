@@ -15,7 +15,7 @@ const renderApp = () => {
       </React.StrictMode>
     );
   } catch (error) {
-    console.error("Erro ao renderizar App:", error);
+    console.error("Erro crítico na renderização do React:", error);
   }
 };
 
