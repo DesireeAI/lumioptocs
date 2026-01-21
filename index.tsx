@@ -3,10 +3,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
-// Garantia para o navegador reconhecer o objeto process.env injetado pelo Netlify
-// Fix: Added 'as any' cast to access 'process' property on window without TypeScript errors
-if (typeof window !== 'undefined' && !(window as any).process) {
-  (window as any).process = { env: {} };
+// Define o shim global apenas se necessário para evitar erros de referência no navegador
+if (typeof window !== 'undefined') {
+  const win = window as any;
+  if (!win.process) {
+    win.process = { env: {} };
+  }
 }
 
 const renderApp = () => {
@@ -21,7 +23,7 @@ const renderApp = () => {
       </React.StrictMode>
     );
   } catch (error) {
-    console.error("Erro crítico na renderização do React:", error);
+    console.error("Erro na inicialização da aplicação:", error);
   }
 };
 

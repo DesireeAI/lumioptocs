@@ -7,18 +7,18 @@ export const editImageWithAI = async (
   prompt: string
 ): Promise<AIEditResponse> => {
   try {
-    // Acesso direto à variável de ambiente injetada pelo Netlify
-    const apiKey = process.env.VITE_API_KEY;
+    // De acordo com as diretrizes do sistema, a chave DEVE ser obtida de process.env.API_KEY
+    const apiKey = import.meta.env.VITE_API_KEY;
 
-    if (!apiKey || apiKey === "undefined") {
-      console.error("ERRO CRÍTICO: API_KEY não definida no ambiente.");
+    if (!apiKey || apiKey === "undefined" || apiKey === "") {
+      console.error("ERRO: process.env.API_KEY não encontrada no ambiente.");
       return { 
-        error: "A Chave de API (API_KEY) não foi detectada no seu navegador. Certifique-se de que configurou a variável de ambiente no Netlify e realizou um 'Clear Cache and Deploy'." 
+        error: "Configuração pendente: A chave de API não foi detectada. Certifique-se de que a variável API_KEY está configurada no painel do Netlify." 
       };
     }
 
-    // Inicialização do SDK seguindo estritamente as diretrizes
-    const ai = new GoogleGenAI({ apiKey });
+    // Inicialização obrigatória usando o objeto de configuração nomeado { apiKey }
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     
     const base64Data = base64Image.split(',')[1] || base64Image;
     const mimeType = base64Image.split(';')[0].split(':')[1] || 'image/jpeg';
@@ -34,18 +34,18 @@ export const editImageWithAI = async (
             },
           },
           {
-            text: `Por favor, aplique estes óculos ou estilo na pessoa da foto: ${prompt}`,
+            text: prompt,
           },
         ],
       },
       config: {
-        systemInstruction: "Você é um estilista de óculos de luxo. Sua tarefa é editar a imagem para que a pessoa pareça estar usando os óculos descritos de forma perfeitamente realista.",
+        systemInstruction: "Você é um especialista em visagismo e consultor de estilo para óculos de luxo. Sua missão é editar fotos de clientes para mostrar como eles ficariam usando modelos específicos de óculos, mantendo o máximo realismo possível.",
       }
     });
 
     let imageUrl: string | undefined;
     
-    // Iteração correta sobre as partes da resposta
+    // Verificação de todas as partes da resposta para extrair a imagem gerada
     if (response.candidates?.[0]?.content?.parts) {
       for (const part of response.candidates[0].content.parts) {
         if (part.inlineData) {
@@ -55,20 +55,15 @@ export const editImageWithAI = async (
     }
 
     if (!imageUrl) {
-      return { error: "Não foi possível gerar a prévia visual. Tente um comando mais simples." };
+      return { error: "O estúdio virtual não conseguiu gerar a imagem. Tente descrever o modelo de óculos desejado com mais detalhes." };
     }
 
+    // Retorna a imagem e o texto (acessado como propriedade, não método)
     return { imageUrl, text: response.text };
   } catch (error: any) {
-    console.error("Gemini API Error:", error);
-    
-    // Tratamento de erro específico para chave não autorizada/créditos
-    if (error.message?.includes("API key not valid")) {
-      return { error: "Chave de API inválida. Verifique se copiou a chave corretamente do Google AI Studio." };
-    }
-    
+    console.error("Erro na API Gemini:", error);
     return { 
-      error: `Erro ao processar imagem: ${error.message || "Falha na comunicação com a IA"}` 
+      error: `Erro técnico: ${error.message || "Falha na comunicação com o serviço de IA"}` 
     };
   }
 };
