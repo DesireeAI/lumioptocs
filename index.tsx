@@ -3,11 +3,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
-// Define o shim global apenas se necessário para evitar erros de referência no navegador
+// Shim para garantir que process.env.API_KEY funcione no navegador sem o bundle do Vite expô-lo publicamente
 if (typeof window !== 'undefined') {
   const win = window as any;
-  if (!win.process) {
-    win.process = { env: {} };
+  win.process = win.process || {};
+  win.process.env = win.process.env || {};
+  
+  // Caso a plataforma injete em variáveis globais diferentes
+  if (!win.process.env.API_KEY && win.API_KEY) {
+    win.process.env.API_KEY = win.API_KEY;
   }
 }
 
@@ -23,7 +27,7 @@ const renderApp = () => {
       </React.StrictMode>
     );
   } catch (error) {
-    console.error("Erro na inicialização da aplicação:", error);
+    console.error("Falha ao iniciar Lumina Optics:", error);
   }
 };
 

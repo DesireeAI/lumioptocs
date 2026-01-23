@@ -7,18 +7,23 @@ export const editImageWithAI = async (
   prompt: string
 ): Promise<AIEditResponse> => {
   try {
-    // De acordo com as diretrizes do sistema, a chave DEVE ser obtida de process.env.API_KEY
-    const apiKey = import.meta.env.VITE_API_KEY;
+    /**
+     * IMPORTANTE: Seguindo as diretrizes obrigatórias do sistema, 
+     * a chave deve ser obtida exclusivamente de process.env.API_KEY.
+     * Em ambientes modernos de deployment, esta variável é injetada 
+     * sem a necessidade do prefixo VITE_ para evitar exposição no bundle final.
+     */
+    const apiKey = process.env.API_KEY;
 
-    if (!apiKey || apiKey === "undefined" || apiKey === "") {
-      console.error("ERRO: process.env.API_KEY não encontrada no ambiente.");
+    if (!apiKey || apiKey === "undefined") {
+      console.error("ERRO: process.env.API_KEY não detectada.");
       return { 
-        error: "Configuração pendente: A chave de API não foi detectada. Certifique-se de que a variável API_KEY está configurada no painel do Netlify." 
+        error: "Configuração pendente: A chave de API não foi detectada. Verifique se a variável 'API_KEY' está configurada corretamente no painel do seu provedor." 
       };
     }
 
-    // Inicialização obrigatória usando o objeto de configuração nomeado { apiKey }
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+    // Inicialização do SDK conforme as regras (usando objeto nomeado)
+    const ai = new GoogleGenAI({ apiKey });
     
     const base64Data = base64Image.split(',')[1] || base64Image;
     const mimeType = base64Image.split(';')[0].split(':')[1] || 'image/jpeg';
@@ -34,18 +39,18 @@ export const editImageWithAI = async (
             },
           },
           {
-            text: prompt,
+            text: `Aplique os seguintes óculos nesta foto: ${prompt}. Mantenha o estilo realista e luxuoso.`,
           },
         ],
       },
       config: {
-        systemInstruction: "Você é um especialista em visagismo e consultor de estilo para óculos de luxo. Sua missão é editar fotos de clientes para mostrar como eles ficariam usando modelos específicos de óculos, mantendo o máximo realismo possível.",
+        systemInstruction: "Você é um especialista em visagismo para óticas de luxo. Sua tarefa é modificar a imagem do usuário para que ele apareça usando os óculos descritos de forma perfeitamente integrada e realista.",
       }
     });
 
     let imageUrl: string | undefined;
     
-    // Verificação de todas as partes da resposta para extrair a imagem gerada
+    // Iteração segura pelas partes da resposta para encontrar a imagem
     if (response.candidates?.[0]?.content?.parts) {
       for (const part of response.candidates[0].content.parts) {
         if (part.inlineData) {
@@ -55,15 +60,15 @@ export const editImageWithAI = async (
     }
 
     if (!imageUrl) {
-      return { error: "O estúdio virtual não conseguiu gerar a imagem. Tente descrever o modelo de óculos desejado com mais detalhes." };
+      return { error: "O Studio não conseguiu processar sua imagem agora. Tente descrever o modelo de óculos com outros termos." };
     }
 
-    // Retorna a imagem e o texto (acessado como propriedade, não método)
+    // Acessando .text como propriedade conforme as regras do SDK
     return { imageUrl, text: response.text };
   } catch (error: any) {
-    console.error("Erro na API Gemini:", error);
+    console.error("Gemini Critical Error:", error);
     return { 
-      error: `Erro técnico: ${error.message || "Falha na comunicação com o serviço de IA"}` 
+      error: `Erro no Studio AI: ${error.message || "Falha técnica na geração da imagem"}` 
     };
   }
 };
